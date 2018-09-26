@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>forms/mainwindow.ui</file>
+        <file>icons/zoom-fit-best.png</file>
+        <file>icons/zoom-original.png</file>
+    </qresource>
+</RCC>
