@@ -10,6 +10,7 @@ class MainWindow : public QWidget
 
 public:
     MainWindow(QWidget *parent = 0);
+    virtual ~MainWindow();
 
 private slots:
     void on_startButton_clicked();

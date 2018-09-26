@@ -1,7 +1,7 @@
 #include <QApplication>
 #include "mainwindow.hh"
 
-#if defined(WIN32)
+#if defined(WIN32) && defined(RELEASE)
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 

@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 #include <lyucamera.h>
+#include <iostream>
 
 static void streamCallback (int index, LyuBuffer *buffer, void *user_data)
 {
@@ -13,6 +14,11 @@ static void streamCallback (int index, LyuBuffer *buffer, void *user_data)
     int h = lyu_buffer_get_image_height(buffer);
     LyuPixelFormat format = lyu_buffer_get_image_pixel_format(buffer);
     MainWindow *mainWindow = static_cast<MainWindow*>(user_data);
+#if 1
+    double frameRate = lyu_camera_get_frame_rate(index);
+	std::cout << "receive stream: " << w << "x" << h << "framerate: " << frameRate
+              << std::hex << "format: " << format << std::endl;
+#endif
     if (format == LYU_PIXEL_FORMAT_MONO_8) {
         QImage image(w, h, QImage::Format_Grayscale8);
         uchar *p = (uchar*)lyu_buffer_get_data(buffer, NULL);
@@ -40,6 +46,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     QMetaObject::connectSlotsByName(this);
     connect(this, &MainWindow::imageComplete, ui_imageViewer, &ImageViewer::setImage);
+}
+
+MainWindow::~MainWindow()
+{
+    lyu_camera_stop_acquisition(0);
+    lyu_camera_close(0);
 }
 
 QWidget* MainWindow::loadUiFile() {
@@ -76,6 +88,9 @@ void MainWindow::on_startButton_clicked() {
         msgBox.exec();
         return;
     }
+
+    lyu_camera_set_acquisition_mode(0, LYU_ACQUISITION_MODE_CONTINUOUS);
+    lyu_camera_set_pixel_format(0, LYU_PIXEL_FORMAT_MONO_8);
 
     lyu_camera_start_acquisition(0, streamCallback, this);
 

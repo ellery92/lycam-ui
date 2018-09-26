@@ -15,20 +15,20 @@ find_package(Qt5UiTools CONFIG REQUIRED)
 include_directories(Qt5Widgets_INCLUDE_DIRS)
 include_directories(Qt5Uitools_INCLUDE_DIRS)
 
+add_executable(lycam-ui ${lycam-ui-SRCS})
+
 if(WIN32)
   set(LYCAM_INCLUDE_DIRS "d:/linux-root/lib/lycam-c/include"
     CACHE PATH "path to lycam-c include directory")
   set(LYCAM_LIB_DIRS "d:/linux-root/lib/lycam-c/lib/"
     CACHE PATH "path to lycam-c lib path")
-  target_include_directories(lycam-c PRIVATE ${LYCAM_INCLUDE_DIRS})
+  target_include_directories(lycam-ui PRIVATE ${LYCAM_INCLUDE_DIRS})
   find_library(lycam-c lycam-c ${LYCAM_LIB_DIRS})
-  target_link_libraries(lycam-ui PUBLIC ${lycam-c})
 else()
   find_library(lycam-c
     NAMES lycam-c
     PATH "/usr/local/lib")
 endif()
 
-add_executable(lycam-ui ${lycam-ui-SRCS})
 target_link_libraries(lycam-ui Qt5::Widgets Qt5::UiTools)
 target_link_libraries(lycam-ui ${lycam-c})
